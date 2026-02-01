@@ -34,6 +34,120 @@
     };
 
     // ==========================================
+    // TYPING ANIMATION
+    // ==========================================
+    
+    class TypingAnimation {
+        constructor() {
+            this.element = document.getElementById('typingName');
+            if (!this.element) return;
+            
+            this.text = this.element.textContent;
+            this.element.textContent = '';
+            this.element.style.opacity = '1';
+            this.charIndex = 0;
+            this.init();
+        }
+
+        init() {
+            setTimeout(() => this.type(), 500);
+        }
+
+        type() {
+            if (this.charIndex < this.text.length) {
+                this.element.textContent += this.text.charAt(this.charIndex);
+                this.charIndex++;
+                setTimeout(() => this.type(), 100);
+            } else {
+                this.element.style.borderRight = 'none';
+            }
+        }
+    }
+
+    // ==========================================
+    // PARTICLE CANVAS BACKGROUND
+    // ==========================================
+    
+    class ParticleCanvas {
+        constructor() {
+            this.canvas = document.getElementById('particleCanvas');
+            if (!this.canvas) return;
+            
+            this.ctx = this.canvas.getContext('2d');
+            this.particles = [];
+            this.particleCount = 80;
+            
+            this.init();
+        }
+
+        init() {
+            this.resize();
+            this.createParticles();
+            this.animate();
+            
+            window.addEventListener('resize', () => this.resize());
+        }
+
+        resize() {
+            this.canvas.width = this.canvas.offsetWidth;
+            this.canvas.height = this.canvas.offsetHeight;
+        }
+
+        createParticles() {
+            for (let i = 0; i < this.particleCount; i++) {
+                this.particles.push({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    radius: Math.random() * 2 + 1,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        animate() {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            
+            this.particles.forEach((particle, i) => {
+                // Update position
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                
+                // Wrap around edges
+                if (particle.x < 0) particle.x = this.canvas.width;
+                if (particle.x > this.canvas.width) particle.x = 0;
+                if (particle.y < 0) particle.y = this.canvas.height;
+                if (particle.y > this.canvas.height) particle.y = 0;
+                
+                // Draw particle
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                this.ctx.fillStyle = `rgba(100, 255, 218, ${particle.opacity})`;
+                this.ctx.fill();
+                
+                // Draw connections
+                for (let j = i + 1; j < this.particles.length; j++) {
+                    const dx = this.particles[j].x - particle.x;
+                    const dy = this.particles[j].y - particle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 120) {
+                        this.ctx.beginPath();
+                        this.ctx.strokeStyle = `rgba(100, 255, 218, ${0.2 * (1 - distance / 120)})`;
+                        this.ctx.lineWidth = 1;
+                        this.ctx.moveTo(particle.x, particle.y);
+                        this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+                        this.ctx.stroke();
+                    }
+                }
+            });
+            
+            requestAnimationFrame(() => this.animate());
+        }
+    }
+
+    // ==========================================
     // NAVIGATION FUNCTIONALITY
     // ==========================================
     
@@ -131,6 +245,17 @@
                     }
                 });
             });
+            
+            // Add scroll indicator functionality
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            if (scrollIndicator) {
+                scrollIndicator.addEventListener('click', () => {
+                    const aboutSection = document.getElementById('about');
+                    if (aboutSection) {
+                        aboutSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
         }
     }
 
@@ -754,6 +879,8 @@
         function init() {
             try {
                 // Initialize all components
+                new TypingAnimation();
+                new ParticleCanvas();
                 new Navigation();
                 new ScrollProgress();
                 new StatsCounter();
