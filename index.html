@@ -49,77 +49,75 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-background">
-            <div class="gradient-overlay"></div>
-            <div class="geometric-shapes">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
-                <div class="shape shape-3"></div>
-            </div>
+            <canvas id="particleCanvas"></canvas>
         </div>
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <div class="hero-badge">
-                        <i class="fas fa-code"></i>
-                        <span>Full Stack Developer</span>
-                    </div>
-                    <h1>Atithi Shekhar</h1>
-                    <p class="subtitle">Building innovative mobile and web solutions with modern technologies</p>
-                    <p class="description">Passionate Computer Science undergraduate specializing in Android development, full-stack web applications, and machine learning. Committed to creating seamless user experiences and scalable solutions.</p>
-                    <div class="hero-buttons">
+                    <p class="hero-greeting">Hi, my name is</p>
+                    <h1 class="hero-name" id="typingName">Atithi Shekhar</h1>
+                    <h2 class="hero-tagline">I build things for the mobile & web.</h2>
+                    <p class="hero-description">
+                        I'm a <strong>Full Stack Android Developer</strong> specializing in building exceptional digital experiences. 
+                        Currently focused on creating innovative mobile applications and scalable web solutions.
+                    </p>
+                    <div class="hero-cta">
                         <a href="#projects" class="btn btn-primary">
-                            <span>View Projects</span>
+                            <span>View My Work</span>
                             <i class="fas fa-arrow-right"></i>
                         </a>
-                        <a href="#contact" class="btn btn-secondary">
+                        <a href="#contact" class="btn btn-outline">
                             <span>Get In Touch</span>
-                            <i class="fas fa-paper-plane"></i>
                         </a>
                     </div>
-                    <div class="hero-stats">
-                        <div class="stat-item">
-                            <span class="stat-number">15+</span>
-                            <span class="stat-label">Projects</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">4</span>
-                            <span class="stat-label">Internships</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">3</span>
-                            <span class="stat-label">Hackathon Wins</span>
-                        </div>
-                    </div>
                 </div>
-                <div class="hero-image">
-                    <div class="profile-card">
-                        <div class="profile-img-wrapper">
-                            <div class="profile-img">
-                                <i class="fas fa-user"></i>
+                <div class="hero-visual">
+                    <div class="floating-card">
+                        <div class="card-glow"></div>
+                        <div class="profile-container">
+                            <div class="profile-pic">
+                                <i class="fas fa-code"></i>
                             </div>
-                            <div class="profile-ring"></div>
                         </div>
-                        <div class="profile-info">
+                        <div class="card-info">
                             <h3>Atithi Shekhar</h3>
-                            <p>Full Stack Android Developer</p>
+                            <p class="card-role">Full Stack Android Developer</p>
+                            <div class="card-stats">
+                                <div class="card-stat">
+                                    <span class="stat-value" data-target="15">0</span>
+                                    <span class="stat-label">Projects</span>
+                                </div>
+                                <div class="card-stat">
+                                    <span class="stat-value" data-target="4">0</span>
+                                    <span class="stat-label">Internships</span>
+                                </div>
+                                <div class="card-stat">
+                                    <span class="stat-value" data-target="3">0</span>
+                                    <span class="stat-label">Awards</span>
+                                </div>
+                            </div>
                             <div class="social-links">
-                                <a href="mailto:atithishekhar@gmail.com" aria-label="Email" title="Email">
+                                <a href="mailto:atithishekhar@gmail.com" aria-label="Email">
                                     <i class="fas fa-envelope"></i>
                                 </a>
-                                <a href="https://github.com/AtithiShekhar/" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+                                <a href="https://github.com/AtithiShekhar/" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                                     <i class="fab fa-github"></i>
                                 </a>
-                                <a href="https://www.linkedin.com/in/atithi-shekhar-720b73313/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+                                <a href="https://www.linkedin.com/in/atithi-shekhar-720b73313/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                                     <i class="fab fa-linkedin"></i>
                                 </a>
-                                <a href="https://atithishekhar.github.io/My-Resume/" target="_blank" rel="noopener noreferrer" aria-label="Portfolio" title="Portfolio">
-                                    <i class="fas fa-globe"></i>
+                                <a href="https://leetcode.com/u/AtithiShekhar1/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode">
+                                    <i class="fas fa-code"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll Down</span>
+            <i class="fas fa-chevron-down"></i>
         </div>
     </section>
 
