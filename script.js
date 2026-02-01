@@ -289,12 +289,24 @@
     
     class StatsCounter {
         constructor() {
-            this.statNumbers = document.querySelectorAll('.stat-number[data-target]');
+            this.statNumbers = document.querySelectorAll('.stat-number[data-target], .stat-value[data-target]');
             this.hasAnimated = new Set();
             this.init();
         }
 
         init() {
+            // Animate hero card stats immediately
+            const heroStats = document.querySelectorAll('.card-stats .stat-value[data-target]');
+            setTimeout(() => {
+                heroStats.forEach(stat => {
+                    if (!this.hasAnimated.has(stat)) {
+                        this.animateCounter(stat);
+                        this.hasAnimated.add(stat);
+                    }
+                });
+            }, 1500);
+
+            // Observe other stats
             const observer = new IntersectionObserver(
                 (entries) => {
                     entries.forEach(entry => {
@@ -307,7 +319,12 @@
                 { threshold: 0.5 }
             );
 
-            this.statNumbers.forEach(stat => observer.observe(stat));
+            this.statNumbers.forEach(stat => {
+                // Don't observe hero stats since we animate them immediately
+                if (!stat.closest('.card-stats')) {
+                    observer.observe(stat);
+                }
+            });
         }
 
         animateCounter(element) {
@@ -323,6 +340,9 @@
                     requestAnimationFrame(updateCounter);
                 } else {
                     element.textContent = target;
+                    if (target > 10) {
+                        element.textContent = target + '+';
+                    }
                 }
             };
 
