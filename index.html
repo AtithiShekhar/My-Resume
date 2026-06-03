@@ -1,713 +1,1596 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Atithi Shekhar - Full Stack Android Developer & Software Engineer specializing in mobile and web development">
-    <meta name="keywords" content="Android Developer, Full Stack Developer, Software Engineer, Kotlin, React, Node.js">
-    <meta name="author" content="Atithi Shekhar">
-    
-    <title>Atithi Shekhar | Full Stack Android Developer</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atithi Shekhar — CTO · Builder · Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   RESET & ROOT
+   ═══════════════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg: #050508;
+  --bg2: #0c0c12;
+  --card: rgba(255,255,255,0.03);
+  --card-border: rgba(255,255,255,0.06);
+  --text: #eaeaea;
+  --text-muted: #777;
+  --accent: #c8ff00;
+  --accent2: #ff4d00;
+  --accent3: #00c2ff;
+  --heading: 'Syne', sans-serif;
+  --body: 'DM Sans', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+html {
+  scroll-behavior: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+a { color: inherit; text-decoration: none; cursor: none; }
+img { max-width: 100%; display: block; }
+button { cursor: none; }
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+/* ═══════════════════════════════════════════════════
+   CUSTOM CURSOR
+   ═══════════════════════════════════════════════════ */
+.cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  mix-blend-mode: difference;
+  transition: transform 0.15s ease;
+}
+.cursor-ring {
+  width: 40px; height: 40px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 99998;
+  transition: width 0.3s, height 0.3s, border-color 0.3s;
+}
+.cursor-ring.hover {
+  width: 60px; height: 60px;
+  border-color: var(--accent2);
+  background: rgba(255,77,0,0.08);
+}
+
+/* ═══════════════════════════════════════════════════
+   NOISE GRAIN OVERLAY
+   ═══════════════════════════════════════════════════ */
+.grain {
+  position: fixed; inset: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 99990;
+  opacity: 0.5;
+  animation: grain 8s steps(10) infinite;
+}
+@keyframes grain { 0%,100%{transform:translate(0)} 10%{transform:translate(-5%,-10%)} 30%{transform:translate(3%,3%)} 50%{transform:translate(-2%,7%)} 70%{transform:translate(7%,-5%)} 90%{transform:translate(-1%,2%)} }
+
+/* ═══════════════════════════════════════════════════
+   SCROLL PROGRESS
+   ═══════════════════════════════════════════════════ */
+.scroll-progress {
+  position: fixed; top: 0; left: 0;
+  width: 0%; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+  z-index: 99995;
+  transition: width 0.1s linear;
+}
+
+/* ═══════════════════════════════════════════════════
+   PRELOADER
+   ═══════════════════════════════════════════════════ */
+.preloader {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 100000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+.preloader.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.preloader-name {
+  font-family: var(--heading);
+  font-size: clamp(2rem, 8vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  overflow: hidden;
+}
+.preloader-name span {
+  display: inline-block;
+  transform: translateY(120%);
+  animation: preloaderReveal 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.preloader-bar {
+  width: 200px; height: 2px;
+  background: rgba(255,255,255,0.1);
+  margin-top: 2rem;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.preloader-bar-fill {
+  width: 0%; height: 100%;
+  background: var(--accent);
+  animation: preloaderFill 2.2s cubic-bezier(0.22,1,0.36,1) forwards 0.5s;
+}
+@keyframes preloaderReveal { to { transform: translateY(0) } }
+@keyframes preloaderFill { to { width: 100% } }
+
+/* ═══════════════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════════════ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  padding: 1.5rem 3rem;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+.nav-logo {
+  font-family: var(--heading);
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+.nav-logo .dot { color: var(--accent); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { width: 100%; }
+
+/* ═══════════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 0 clamp(2rem, 6vw, 8rem);
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+}
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+.hero-glow-1 { background: var(--accent); top: -200px; right: -100px; }
+.hero-glow-2 { background: var(--accent2); bottom: -200px; left: -100px; }
+.hero-glow-3 { background: var(--accent3); top: 50%; left: 50%; transform: translate(-50%,-50%); opacity: 0.05; }
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.hero-eyebrow span {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.hero-name {
+  font-family: var(--heading);
+  font-size: clamp(3.5rem, 11vw, 10rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+}
+.hero-name .line {
+  display: block;
+  overflow: hidden;
+}
+.hero-name .line-inner {
+  display: block;
+  transform: translateY(110%);
+  opacity: 0;
+}
+.hero-name .stroke-text {
+  -webkit-text-stroke: 2px var(--text);
+  color: transparent;
+}
+.hero-name .accent-text { color: var(--accent); }
+
+.hero-subtitle {
+  font-family: var(--body);
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  color: var(--text-muted);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-top: 1rem;
+  overflow: hidden;
+}
+.hero-subtitle span {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.hero-cta {
+  display: flex; gap: 1.5rem;
+  margin-top: 3rem;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.hero-cta .btn {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 1rem 2.5rem;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+.hero-cta .btn:hover { transform: scale(1.05); }
+.hero-cta .btn::after {
+  content: ''; position: absolute; inset: 0;
+  background: var(--accent2);
+  transform: translateX(-101%);
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.hero-cta .btn:hover::after { transform: translateX(0); }
+.hero-cta .btn span { position: relative; z-index: 1; }
+
+.hero-cta .btn-outline {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text);
+}
+.hero-cta .btn-outline::after { background: rgba(255,255,255,0.05); }
+
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: fadeInUp 1s 3s forwards;
+}
+.hero-scroll-indicator span {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.scroll-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollLine 2s infinite;
+}
+@keyframes scrollLine { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
+@keyframes fadeInUp { to { opacity: 1; } }
+
+/* ═══════════════════════════════════════════════════
+   STATS MARQUEE
+   ═══════════════════════════════════════════════════ */
+.stats-marquee {
+  overflow: hidden;
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+  padding: 1.2rem 0;
+  position: relative;
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+.marquee-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0 2rem;
+  white-space: nowrap;
+}
+.marquee-item .num {
+  font-family: var(--heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+.marquee-item .label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.marquee-sep {
+  color: var(--accent2);
+  font-size: 1.5rem;
+  padding: 0 1rem;
+  opacity: 0.4;
+}
+@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ═══════════════════════════════════════════════════
+   SECTION COMMON
+   ═══════════════════════════════════════════════════ */
+.section {
+  padding: clamp(4rem, 10vh, 8rem) clamp(2rem, 6vw, 8rem);
+  position: relative;
+}
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.section-label::before {
+  content: '';
+  width: 40px; height: 1px;
+  background: var(--accent);
+}
+.section-title {
+  font-family: var(--heading);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+.section-title .accent { color: var(--accent); }
+.section-title .accent2 { color: var(--accent2); }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ═══════════════════════════════════════════════════
+   ABOUT SECTION
+   ═══════════════════════════════════════════════════ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-top: 3rem;
+}
+.about-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+.about-text strong { color: var(--text); font-weight: 500; }
+.about-text .highlight {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.about-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.about-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.about-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+.about-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.about-card:hover::before { opacity: 1; }
+.about-card .card-num {
+  font-family: var(--heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+.about-card .card-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+/* ═══════════════════════════════════════════════════
+   EXPERIENCE SECTION
+   ═══════════════════════════════════════════════════ */
+.exp-timeline {
+  margin-top: 3rem;
+  position: relative;
+  padding-left: 3rem;
+}
+.exp-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--accent3), transparent);
+}
+.exp-item {
+  position: relative;
+  padding-bottom: 3rem;
+}
+.exp-item::before {
+  content: '';
+  position: absolute;
+  left: -3rem;
+  top: 8px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.exp-item:hover::before {
+  background: var(--accent);
+  box-shadow: 0 0 20px rgba(200,255,0,0.4);
+}
+.exp-item:nth-child(2)::before { border-color: var(--accent2); }
+.exp-item:nth-child(2):hover::before { background: var(--accent2); box-shadow: 0 0 20px rgba(255,77,0,0.4); }
+.exp-item:nth-child(3)::before { border-color: var(--accent3); }
+.exp-item:nth-child(3):hover::before { background: var(--accent3); box-shadow: 0 0 20px rgba(0,194,255,0.4); }
+
+.exp-date {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.exp-role {
+  font-family: var(--heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0.3rem 0;
+  letter-spacing: -0.02em;
+}
+.exp-company {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 0.8rem;
+}
+.exp-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 600px;
+}
+.exp-tags {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+.exp-tag {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  background: var(--card);
+}
+
+/* ═══════════════════════════════════════════════════
+   PROJECTS SECTION
+   ═══════════════════════════════════════════════════ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.project-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.4s, transform 0.4s;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+.project-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-8px);
+}
+.project-card .card-glow {
+  position: absolute;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.project-card:hover .card-glow { opacity: 0.08; }
+.project-card:nth-child(1) .card-glow { background: var(--accent); }
+.project-card:nth-child(2) .card-glow { background: var(--accent2); }
+.project-card:nth-child(3) .card-glow { background: var(--accent3); }
+.project-card:nth-child(4) .card-glow { background: #a855f7; }
+.project-card:nth-child(5) .card-glow { background: var(--accent); }
+.project-card:nth-child(6) .card-glow { background: var(--accent2); }
+
+.project-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.project-badge {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid;
+  line-height: 1;
+}
+.badge-live { color: var(--accent); border-color: var(--accent); }
+.badge-gov { color: var(--accent2); border-color: var(--accent2); }
+.badge-conf { color: var(--accent3); border-color: var(--accent3); }
+.badge-startup { color: #a855f7; border-color: #a855f7; }
+
+.project-icon {
+  font-size: 1.5rem;
+  opacity: 0.4;
+}
+
+.project-name {
+  font-family: var(--heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+.project-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.project-stack {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+}
+.project-stack span {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(200,255,0,0.06);
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+.project-card .arrow {
+  position: absolute;
+  bottom: 2rem; right: 2rem;
+  width: 40px; height: 40px;
+  border: 1px solid var(--card-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+}
+.project-card:hover .arrow {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+  transform: rotate(-45deg);
+}
+
+/* ═══════════════════════════════════════════════════
+   ACHIEVEMENTS SECTION
+   ═══════════════════════════════════════════════════ */
+.achievements-list {
+  margin-top: 3rem;
+  display: flex; flex-direction: column; gap: 0;
+}
+.achievement-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--card-border);
+  align-items: center;
+  transition: background 0.3s, padding-left 0.3s;
+}
+.achievement-row:hover {
+  background: var(--card);
+  padding-left: 1.5rem;
+}
+.achievement-icon {
+  font-size: 2.5rem;
+  text-align: center;
+}
+.achievement-content {}
+.achievement-title {
+  font-family: var(--heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.3rem;
+}
+.achievement-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════
+   SKILLS SECTION
+   ═══════════════════════════════════════════════════ */
+.skills-orbit {
+  margin-top: 3rem;
+  display: flex; flex-direction: column; gap: 1.5rem;
+}
+.skills-category {
+  display: flex; align-items: center; gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.skills-cat-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  min-width: 100px;
+}
+.skills-pills {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+}
+.skill-pill {
+  font-family: var(--body);
+  font-size: 0.85rem;
+  padding: 0.5rem 1.2rem;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.skill-pill::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.skill-pill:hover {
+  border-color: var(--accent);
+  color: var(--bg);
+  transform: translateY(-2px);
+}
+.skill-pill:hover::before { opacity: 1; }
+.skill-pill span { position: relative; z-index: 1; }
+
+/* ═══════════════════════════════════════════════════
+   CONTACT SECTION
+   ═══════════════════════════════════════════════════ */
+.contact {
+  padding: clamp(4rem, 12vh, 10rem) clamp(2rem, 6vw, 8rem);
+  text-align: center;
+  position: relative;
+}
+.contact-glow {
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.1;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--accent);
+  pointer-events: none;
+}
+.contact-title {
+  font-family: var(--heading);
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+}
+.contact-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 500px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+.contact-links {
+  display: flex; justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.contact-link {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 1rem 2.5rem;
+  border: 1px solid var(--card-border);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+.contact-link::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.contact-link:hover { color: var(--bg); border-color: var(--accent); }
+.contact-link:hover::before { transform: scaleX(1); }
+.contact-link span { position: relative; z-index: 1; }
+
+/* ═══════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════ */
+.footer {
+  padding: 2rem clamp(2rem, 6vw, 8rem);
+  border-top: 1px solid var(--card-border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-left {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+.footer-right {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════════════════
+   FLOATING PARTICLES (CANVAS)
+   ═══════════════════════════════════════════════════ */
+#particles-canvas {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .cursor-dot, .cursor-ring { display: none; }
+  body { cursor: auto; }
+  a, button { cursor: auto; }
+  .nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { padding: 0 1.5rem; }
+  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .about-cards { grid-template-columns: 1fr 1fr; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .achievement-row { grid-template-columns: 50px 1fr; gap: 1rem; }
+  .footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  .contact-links { flex-direction: column; align-items: center; }
+  .skills-category { flex-direction: column; align-items: flex-start; }
+}
+</style>
 </head>
 <body>
-    <!-- Scroll Progress Bar -->
-    <div class="scroll-progress" id="scrollProgress" role="progressbar" aria-label="Page scroll progress"></div>
 
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
-        <div class="container">
-            <div class="nav-container">
-                <a href="#home" class="logo" aria-label="Home">AS</a>
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#skills">Skills</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#experience">Experience</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle mobile menu" aria-expanded="false">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </nav>
+<!-- CUSTOM CURSOR -->
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-background">
-            <canvas id="particleCanvas"></canvas>
-        </div>
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <p class="hero-greeting">Hi, my name is</p>
-                    <h1 class="hero-name" id="typingName">Atithi Shekhar</h1>
-                    <h2 class="hero-tagline">I build things for the mobile & web.</h2>
-                    <p class="hero-description">
-                        I'm a <strong>Full Stack Android Developer</strong> specializing in building exceptional digital experiences. 
-                        Currently focused on creating innovative mobile applications and scalable web solutions.
-                    </p>
-                    <div class="hero-cta">
-                        <a href="#projects" class="btn btn-primary">
-                            <span>View My Work</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                        <a href="#contact" class="btn btn-outline">
-                            <span>Get In Touch</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="hero-visual">
-                    <div class="floating-card">
-                        <div class="card-glow"></div>
-                        <div class="profile-container">
-                            <div class="profile-pic">
-                                <i class="fas fa-code"></i>
-                            </div>
-                        </div>
-                        <div class="card-info">
-                            <h3>Atithi Shekhar</h3>
-                            <p class="card-role">Full Stack Android Developer</p>
-                            <div class="card-stats">
-                                <div class="card-stat">
-                                    <span class="stat-value" data-target="15">0</span>
-                                    <span class="stat-label">Projects</span>
-                                </div>
-                                <div class="card-stat">
-                                    <span class="stat-value" data-target="4">0</span>
-                                    <span class="stat-label">Internships</span>
-                                </div>
-                                <div class="card-stat">
-                                    <span class="stat-value" data-target="3">0</span>
-                                    <span class="stat-label">Awards</span>
-                                </div>
-                            </div>
-                            <div class="social-links">
-                                <a href="mailto:atithishekhar@gmail.com" aria-label="Email">
-                                    <i class="fas fa-envelope"></i>
-                                </a>
-                                <a href="https://github.com/AtithiShekhar/" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                                <a href="https://www.linkedin.com/in/atithi-shekhar-720b73313/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                                    <i class="fab fa-linkedin"></i>
-                                </a>
-                                <a href="https://leetcode.com/u/AtithiShekhar1/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode">
-                                    <i class="fas fa-code"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="scroll-indicator">
-            <span>Scroll Down</span>
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </section>
+<!-- NOISE GRAIN -->
+<div class="grain"></div>
 
-    <!-- About Section -->
-    <section class="section about" id="about">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">About Me</h2>
-                <p class="section-subtitle">Dedicated to building innovative solutions and continuously learning</p>
-            </div>
-            <div class="about-content">
-                <div class="about-text">
-                    <div class="text-block">
-                        <h3>Who I Am</h3>
-                        <p>I'm a passionate Computer Science undergraduate from Jabalpur Engineering College with a strong foundation in both mobile and web development. My journey in technology started with a curiosity about how applications work, and it has evolved into a comprehensive skill set spanning Android development, full-stack web development, and machine learning.</p>
-                    </div>
-                    <div class="text-block">
-                        <h3>What I Do</h3>
-                        <p>Currently pursuing my Bachelor's in Computer Science & Engineering (2023-2027), I specialize in Android development using Kotlin and Java, full-stack web development with React and Node.js, and have hands-on experience with modern technologies like Firebase, MongoDB, and Spring Boot.</p>
-                    </div>
-                    <div class="text-block">
-                        <h3>Beyond Coding</h3>
-                        <p>I'm also a recognized poet, having represented at national and state-level competitions. This creative background helps me bring unique perspectives and innovative solutions to technical challenges.</p>
-                    </div>
-                </div>
-                <div class="about-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-project-diagram"></i>
-                        </div>
-                        <span class="stat-number" data-target="15">0</span>
-                        <span class="stat-label">Projects Completed</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <span class="stat-number" data-target="4">0</span>
-                        <span class="stat-label">Internships</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <span class="stat-number" data-target="3">0</span>
-                        <span class="stat-label">Hackathon Wins</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-calendar"></i>
-                        </div>
-                        <span class="stat-number" data-target="2">0</span>
-                        <span class="stat-label">Years Experience</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress"></div>
 
-    <!-- Skills Section -->
-    <section class="section skills" id="skills">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Technical Expertise</h2>
-                <p class="section-subtitle">Comprehensive skill set across multiple technologies</p>
-            </div>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <div class="skill-icon">
-                            <i class="fab fa-android"></i>
-                        </div>
-                        <h3>Mobile Development</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Android</span>
-                        <span class="skill-tag">Kotlin</span>
-                        <span class="skill-tag">Java</span>
-                        <span class="skill-tag">Jetpack Compose</span>
-                        <span class="skill-tag">XML</span>
-                        <span class="skill-tag">Material Design</span>
-                    </div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <div class="skill-icon">
-                            <i class="fas fa-laptop-code"></i>
-                        </div>
-                        <h3>Frontend Development</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span class="skill-tag">React</span>
-                        <span class="skill-tag">HTML5</span>
-                        <span class="skill-tag">CSS3</span>
-                        <span class="skill-tag">JavaScript</span>
-                        <span class="skill-tag">Tailwind CSS</span>
-                        <span class="skill-tag">Responsive Design</span>
-                    </div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <div class="skill-icon">
-                            <i class="fas fa-server"></i>
-                        </div>
-                        <h3>Backend Development</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Node.js</span>
-                        <span class="skill-tag">Express.js</span>
-                        <span class="skill-tag">Spring Boot</span>
-                        <span class="skill-tag">REST API</span>
-                        <span class="skill-tag">Microservices</span>
-                    </div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <div class="skill-icon">
-                            <i class="fas fa-database"></i>
-                        </div>
-                        <h3>Database & Cloud</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span class="skill-tag">MongoDB</span>
-                        <span class="skill-tag">Firebase</span>
-                        <span class="skill-tag">SQL</span>
-                        <span class="skill-tag">Cloud Storage</span>
-                        <span class="skill-tag">Real-time DB</span>
-                    </div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <div class="skill-icon">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <h3>Core Competencies</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Data Structures</span>
-                        <span class="skill-tag">Algorithms</span>
-                        <span class="skill-tag">Machine Learning</span>
-                        <span class="skill-tag">Problem Solving</span>
-                    </div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <div class="skill-icon">
-                            <i class="fas fa-tools"></i>
-                        </div>
-                        <h3>Tools & Platforms</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Git</span>
-                        <span class="skill-tag">GitHub</span>
-                        <span class="skill-tag">Android Studio</span>
-                        <span class="skill-tag">VS Code</span>
-                        <span class="skill-tag">Postman</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- PARTICLES -->
+<canvas id="particles-canvas"></canvas>
 
-    <!-- Projects Section -->
-    <section class="section projects" id="projects">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Featured Projects</h2>
-                <p class="section-subtitle">Innovative solutions built with cutting-edge technologies</p>
-            </div>
-            <div class="projects-grid">
-                <!-- Project 1 -->
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <i class="fas fa-music"></i>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <div class="project-header">
-                            <h3>Tuneca Music Streaming Platform</h3>
-                            <span class="project-date">May - June 2025</span>
-                        </div>
-                        <p class="project-description">Comprehensive music streaming application featuring ad-free experience, multi-platform audio fetching using NewPipeExtractor, and support for music, podcasts, and news streaming with superior user experience.</p>
-                        <div class="project-tech">
-                            <span class="tech-badge">Kotlin</span>
-                            <span class="tech-badge">Firebase</span>
-                            <span class="tech-badge">NewPipeExtractor</span>
-                            <span class="tech-badge">API Integration</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://drive.google.com/file/d/1aaSdAWemUOFuqKIvylHA7KMH5WLcUOy4/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="project-link">
-                                <i class="fas fa-play"></i>
-                                <span>View Demo</span>
-                            </a>
-                            <a href="https://drive.google.com/file/d/1Jb1JH-fwy5wCUemjUe0VmwC6IC0QwrKF/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="project-link project-link-secondary">
-                                <i class="fas fa-external-link-alt"></i>
-                                <span>Details</span>
-                            </a>
-                        </div>
-                    </div>
-                </article>
+<!-- PRELOADER -->
+<div class="preloader" id="preloader">
+  <div class="preloader-name">
+    <span style="animation-delay:0.3s">A</span><span style="animation-delay:0.35s">t</span><span style="animation-delay:0.4s">i</span><span style="animation-delay:0.45s">t</span><span style="animation-delay:0.5s">h</span><span style="animation-delay:0.55s">i</span><span style="animation-delay:0.65s" class="accent-text"> </span><span style="animation-delay:0.7s">S</span><span style="animation-delay:0.75s">h</span><span style="animation-delay:0.8s">e</span><span style="animation-delay:0.85s">k</span><span style="animation-delay:0.9s">h</span><span style="animation-delay:0.95s">a</span><span style="animation-delay:1s">r</span>
+  </div>
+  <div class="preloader-bar"><div class="preloader-bar-fill"></div></div>
+</div>
 
-                <!-- Project 2 -->
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <i class="fas fa-envelope-open-text"></i>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <div class="project-header">
-                            <h3>TempMail Pro</h3>
-                            <span class="project-date">May - June 2025</span>
-                        </div>
-                        <p class="project-description">Advanced temporary email application with 12+ hour email retention, comprehensive inbox management, 11-language support, and intuitive UI design with zero bugs and smooth functionality.</p>
-                        <div class="project-tech">
-                            <span class="tech-badge">Android</span>
-                            <span class="tech-badge">Java</span>
-                            <span class="tech-badge">REST API</span>
-                            <span class="tech-badge">Multi-language</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://drive.google.com/file/d/1aaSdAWemUOFuqKIvylHA7KMH5WLcUOy4/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="project-link">
-                                <i class="fas fa-play"></i>
-                                <span>View Demo</span>
-                            </a>
-                        </div>
-                    </div>
-                </article>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">AS<span class="dot">.</span></div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#achievements">Achievements</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
 
-                <!-- Project 3 -->
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <i class="fas fa-question-circle"></i>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <div class="project-header">
-                            <h3>QuizMaster Programming App</h3>
-                            <span class="project-date">April - May 2025</span>
-                        </div>
-                        <p class="project-description">Feature-rich quiz application with user authentication, real-time leaderboards, multiple quiz categories, live quiz functionality, and comprehensive score tracking system.</p>
-                        <div class="project-tech">
-                            <span class="tech-badge">Android</span>
-                            <span class="tech-badge">Firebase</span>
-                            <span class="tech-badge">Real-time DB</span>
-                            <span class="tech-badge">Authentication</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://drive.google.com/file/d/1hj_-VdLof6oZL7SjbK7TYzOqCCVOBDON/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="project-link">
-                                <i class="fas fa-play"></i>
-                                <span>View Demo</span>
-                            </a>
-                        </div>
-                    </div>
-                </article>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+  <div class="hero-glow hero-glow-3"></div>
 
-                <!-- Project 4 -->
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <i class="fas fa-file-pdf"></i>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <div class="project-header">
-                            <h3>Excel-PDF Converter</h3>
-                            <span class="project-date">May 2025</span>
-                        </div>
-                        <p class="project-description">Efficient file conversion application supporting multiple Excel formats with 100% accuracy, data integrity preservation, and seamless PDF generation capabilities.</p>
-                        <div class="project-tech">
-                            <span class="tech-badge">Android</span>
-                            <span class="tech-badge">File Processing</span>
-                            <span class="tech-badge">PDF Generation</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://drive.google.com/file/d/19qoQZ7JiDwq84At571MNeQCUi2AXF6MK/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="project-link">
-                                <i class="fas fa-play"></i>
-                                <span>View Demo</span>
-                            </a>
-                        </div>
-                    </div>
-                </article>
+  <div class="hero-eyebrow"><span>CTO &nbsp;•&nbsp; Co-Founder &nbsp;•&nbsp; Engineer</span></div>
+  <h1 class="hero-name">
+    <span class="line"><span class="line-inner">Atithi</span></span>
+    <span class="line"><span class="line-inner"><span class="stroke-text">She</span><span class="accent-text">khar</span></span></span>
+  </h1>
+  <p class="hero-subtitle">
+    <span>Building the future of fintech from Jabalpur. CTO of a Dubai & India funded crypto platform. 20+ production apps. 50K+ downloads. Code that runs in government jails and on your phone.</span>
+  </p>
+  <div class="hero-cta">
+    <a href="mailto:atithishekhar@gmail.com" class="btn"><span>Get In Touch</span></a>
+    <a href="https://github.com/AtithiShekhar" target="_blank" class="btn btn-outline"><span>GitHub ↗</span></a>
+  </div>
+  <div class="hero-scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
 
-                <!-- Project 5 -->
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <i class="fas fa-comments"></i>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <div class="project-header">
-                            <h3>ChatApp Real-time Messaging</h3>
-                            <span class="project-date">December 2024</span>
-                        </div>
-                        <p class="project-description">Fully functional real-time messaging application with chat room creation, instant messaging capabilities, and seamless user experience for group communications.</p>
-                        <div class="project-tech">
-                            <span class="tech-badge">Android</span>
-                            <span class="tech-badge">Firebase</span>
-                            <span class="tech-badge">Real-time DB</span>
-                            <span class="tech-badge">Chat Rooms</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://drive.google.com/file/d/1ZitD_uJkfzskdtAqlNcZ5Q0Pg6G03cYA/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="project-link">
-                                <i class="fas fa-play"></i>
-                                <span>View Demo</span>
-                            </a>
-                        </div>
-                    </div>
-                </article>
+<!-- STATS MARQUEE -->
+<div class="stats-marquee">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="num">20+</span><span class="label">Apps Shipped</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">50K+</span><span class="label">Play Store Downloads</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">51K</span><span class="label">Lines in 3 Days</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">CTO</span><span class="label">Dubai Funded Startup</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">4</span><span class="label">Domains Shipped</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">3K+</span><span class="label">Teams Beaten at Hack&Make</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">20+</span><span class="label">Apps Shipped</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">50K+</span><span class="label">Play Store Downloads</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">51K</span><span class="label">Lines in 3 Days</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">CTO</span><span class="label">Dubai Funded Startup</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">4</span><span class="label">Domains Shipped</span></div>
+    <span class="marquee-sep">◆</span>
+    <div class="marquee-item"><span class="num">3K+</span><span class="label">Teams Beaten at Hack&Make</span></div>
+    <span class="marquee-sep">◆</span>
+  </div>
+</div>
 
-                <!-- Project 6 -->
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <div class="project-header">
-                            <h3>More Projects</h3>
-                            <span class="project-date">View on GitHub</span>
-                        </div>
-                        <p class="project-description">Explore more projects including web applications, machine learning models, and open-source contributions on my GitHub profile.</p>
-                        <div class="project-tech">
-                            <span class="tech-badge">Various Technologies</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/AtithiShekhar/" target="_blank" rel="noopener noreferrer" class="project-link">
-                                <i class="fab fa-github"></i>
-                                <span>View GitHub</span>
-                            </a>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="section-label reveal"><span>01</span> About</div>
+  <h2 class="section-title reveal reveal-delay-1">I don't just <span class="accent">build apps</span>.<br>I build <span class="accent2">products that ship</span>.</h2>
+  <div class="about-grid">
+    <div class="about-text reveal reveal-delay-2">
+      I'm a <strong>fourth-year CSE student</strong> at Jabalpur Engineering College who somehow ended up as <strong>CTO of a Dubai funded crypto fintech startup</strong> before most people finish their coursework.<br><br>
+      My code runs in <span class="highlight">government prisons across Chhattisgarh</span>, processes payments through <span class="highlight">TRON/USDT-TRC20 blockchain</span>, helps doctors make <span class="highlight">evidence-based medical decisions</span>, and delivers <span class="highlight">quick commerce orders</span> to 40K+ users.<br><br>
+      I hold a B.Tech in CSE, B.Sc in Computer Science, and B.A in Economics. I've interned at IIT Jodhpur and IIT Indore physically. I won MP's biggest hackathon out of 3,000+ teams and got my award from the Chief Minister himself.<br><br>
+      I don't optimise for interviews. I optimise for <strong>shipping</strong>.
+    </div>
+    <div class="about-cards reveal reveal-delay-3">
+      <div class="about-card">
+        <div class="card-num" data-count="20">0</div>
+        <div class="card-label">Production Apps</div>
+      </div>
+      <div class="about-card">
+        <div class="card-num" data-count="50">0</div>
+        <div class="card-label">K+ Downloads</div>
+      </div>
+      <div class="about-card">
+        <div class="card-num" data-count="12">0</div>
+        <div class="card-label">Play Store Apps</div>
+      </div>
+      <div class="about-card">
+        <div class="card-num" data-count="4">0</div>
+        <div class="card-label">Industry Domains</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Experience Section -->
-    <section class="section experience" id="experience">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Professional Experience</h2>
-                <p class="section-subtitle">Career journey and key achievements</p>
-            </div>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">Apr 2025 - Present</span>
-                        <h3>Full Stack Android Developer</h3>
-                        <h4>DataWaves <span class="remote-badge">Remote</span></h4>
-                        <p>Leading full-stack Android development initiatives, implementing modern development practices and contributing to innovative mobile solutions.</p>
-                        <ul class="experience-highlights">
-                            <li>Architecting scalable Android applications</li>
-                            <li>Implementing best practices and design patterns</li>
-                            <li>Collaborating with cross-functional teams</li>
-                        </ul>
-                    </div>
-                </div>
+<!-- EXPERIENCE -->
+<section class="section" id="experience" style="background: var(--bg2);">
+  <div class="section-label reveal"><span>02</span> Experience</div>
+  <h2 class="section-title reveal reveal-delay-1">From intern to <span class="accent">CTO</span>.<br>In under <span class="accent2">2 years</span>.</h2>
+  <div class="exp-timeline">
+    <div class="exp-item reveal">
+      <div class="exp-date">Apr 2026 – Present</div>
+      <div class="exp-role">Chief Technology Officer</div>
+      <div class="exp-company">American Crypto Card • Dubai & India Funded</div>
+      <div class="exp-desc">Sole architect of a custodial crypto wallet platform. RedotPay competitor. Designed the entire microservices architecture, dual KYC flows, and blockchain integration. Platform 40% complete in just 6 working days.</div>
+      <div class="exp-tags">
+        <span class="exp-tag">Flutter</span>
+        <span class="exp-tag">Go</span>
+        <span class="exp-tag">PostgreSQL</span>
+        <span class="exp-tag">Kafka</span>
+        <span class="exp-tag">Redis</span>
+        <span class="exp-tag">TRON/TRC20</span>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-date" style="color:var(--accent2)">Apr 2025 – Present</div>
+      <div class="exp-role">Android App Developer</div>
+      <div class="exp-company">DATAWAVES</div>
+      <div class="exp-desc">Shipped 20+ Android apps to Play Store. Alert Soundbox crossed 50K+ downloads as a Paytm/PhonePe soundbox replacement. Optimised frame times from 500ms to 8ms. Built a Chromium-based private browser from scratch.</div>
+      <div class="exp-tags">
+        <span class="exp-tag">Kotlin</span>
+        <span class="exp-tag">Jetpack Compose</span>
+        <span class="exp-tag">Firebase</span>
+        <span class="exp-tag">Chromium</span>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-date" style="color:var(--accent3)">Oct 2025 – Present</div>
+      <div class="exp-role">Software Developer Intern</div>
+      <div class="exp-company">VisiSafeMed</div>
+      <div class="exp-desc">Built 4 products and 2 backends for the IBR medical platform. RAG-based agentic system using ChromaDB. Custom knowledge base generator. AWS infrastructure across Lambda, S3, Bedrock, ECS, Fargate.</div>
+      <div class="exp-tags">
+        <span class="exp-tag">Flutter</span>
+        <span class="exp-tag">Python</span>
+        <span class="exp-tag">ChromaDB</span>
+        <span class="exp-tag">AWS</span>
+        <span class="exp-tag">RAG</span>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-date" style="color:#a855f7">Sep 2025 – Dec 2025</div>
+      <div class="exp-role">Full Stack Developer</div>
+      <div class="exp-company">DSS Solutions • Government Project</div>
+      <div class="exp-desc">Built the prison calling & management system deployed across all Chhattisgarh jails. Video/voice calling, billing, payments, PSTN calling, call recording, tracking.</div>
+      <div class="exp-tags">
+        <span class="exp-tag">Spring Boot</span>
+        <span class="exp-tag">Kotlin</span>
+        <span class="exp-tag">Exotel</span>
+        <span class="exp-tag">Firebase</span>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-date" style="color:var(--text-muted)">2025 – Present</div>
+      <div class="exp-role">Co-Founder & Lead Developer</div>
+      <div class="exp-company">Grabily • Digital Food Mess Platform</div>
+      <div class="exp-desc">Singlehandedly built both user app and mess partner app. FCM push, subscription management, cancellation & refund flows.</div>
+      <div class="exp-tags">
+        <span class="exp-tag">Kotlin</span>
+        <span class="exp-tag">Compose</span>
+        <span class="exp-tag">Hilt</span>
+        <span class="exp-tag">Firebase</span>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-date" style="color:var(--text-muted)">Jul 2024</div>
+      <div class="exp-role">ML Research Intern</div>
+      <div class="exp-company">IIT Jodhpur • On-site</div>
+      <div class="exp-desc">Physical internship at IIT Jodhpur campus. Data preprocessing and ML workflows using NumPy, Pandas.</div>
+      <div class="exp-tags">
+        <span class="exp-tag">Python</span>
+        <span class="exp-tag">NumPy</span>
+        <span class="exp-tag">Pandas</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">Apr 2025 - Present</span>
-                        <h3>Full Stack Developer</h3>
-                        <h4>Renu Sharma Foundation <span class="remote-badge">Remote</span></h4>
-                        <p>Developing comprehensive web applications using modern tech stack, focusing on responsive design and optimal user experience.</p>
-                        <ul class="experience-highlights">
-                            <li>Building responsive web applications</li>
-                            <li>Optimizing performance and user experience</li>
-                            <li>Implementing modern frontend frameworks</li>
-                        </ul>
-                    </div>
-                </div>
+<!-- PROJECTS -->
+<section class="section" id="projects">
+  <div class="section-label reveal"><span>03</span> Projects</div>
+  <h2 class="section-title reveal reveal-delay-1">Things I've <span class="accent">built</span>.<br>Things that <span class="accent2">run in production</span>.</h2>
+  <div class="projects-grid">
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">Feb - Mar 2025</span>
-                        <h3>Junior Web Developer</h3>
-                        <h4>Aadi Foundation <span class="remote-badge">Remote</span></h4>
-                        <p>Contributed to web development projects with 30 hours/week commitment, gaining practical experience in professional development workflows.</p>
-                        <ul class="experience-highlights">
-                            <li>Developed features for web applications</li>
-                            <li>Participated in code reviews</li>
-                            <li>Learned professional development practices</li>
-                        </ul>
-                    </div>
-                </div>
+    <div class="project-card reveal">
+      <div class="card-glow"></div>
+      <div class="project-header">
+        <span class="project-badge badge-conf">Fintech • Confidential</span>
+        <span class="project-icon">₿</span>
+      </div>
+      <div class="project-name">American Crypto Card</div>
+      <div class="project-desc">Custodial crypto wallet, physical card issuing, USDT transfers, fiat conversion. Dubai & India funded. Built as sole architect. 40% complete in 6 working days against 6-month roadmap.</div>
+      <div class="project-stack">
+        <span>Flutter</span><span>Go</span><span>PostgreSQL</span><span>Kafka</span><span>Redis</span><span>TRON</span>
+      </div>
+    </div>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">Jul 2024</span>
-                        <h3>Machine Learning Intern</h3>
-                        <h4>IIT Jodhpur <span class="remote-badge">Remote</span></h4>
-                        <p>Gained hands-on experience in machine learning algorithms, data analysis, and ECG signal processing techniques.</p>
-                        <ul class="experience-highlights">
-                            <li>Worked on ML algorithms and models</li>
-                            <li>Analyzed ECG signal data</li>
-                            <li>Collaborated with research teams</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="project-card reveal reveal-delay-1">
+      <div class="card-glow"></div>
+      <div class="project-header">
+        <span class="project-badge badge-gov">GovTech • Live</span>
+        <span class="project-icon">🏛</span>
+      </div>
+      <div class="project-name">Prison Calling System</div>
+      <div class="project-desc">Video/voice calling, billing, payments, PSTN calling to keypads, call recording, tracking. Deployed across all jails of Chhattisgarh. Built for the state government.</div>
+      <div class="project-stack">
+        <span>Spring Boot</span><span>Kotlin</span><span>Compose</span><span>Exotel</span><span>Firebase</span>
+      </div>
+    </div>
 
-    <!-- Achievements Section -->
-    <section class="section achievements">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Achievements & Recognition</h2>
-                <p class="section-subtitle">Notable accomplishments and awards</p>
-            </div>
-            <div class="achievements-grid">
-                <div class="achievement-card achievement-gold">
-                    <div class="achievement-icon">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <h3>Vibe-Coding Hackathon</h3>
-                    <span class="achievement-position">1st Position</span>
-                    <p>Winner among 95 teams in intensive 24-hour hackathon, demonstrating exceptional problem-solving and development skills.</p>
-                </div>
+    <div class="project-card reveal reveal-delay-2">
+      <div class="card-glow"></div>
+      <div class="project-header">
+        <span class="project-badge badge-live">40K+ Downloads</span>
+        <span class="project-icon">🛒</span>
+      </div>
+      <div class="project-name">Starial + Delivery App</div>
+      <div class="project-desc">AI-powered quick commerce SaaS. Built main app + delivery partner app solo. Invited to NSE Mumbai. MSME Ministerial award for tech innovation.</div>
+      <div class="project-stack">
+        <span>Flutter</span><span>Firebase</span><span>AI</span><span>Kotlin</span>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.starial.stationery&hl=en-US" target="_blank" class="arrow">↗</a>
+    </div>
 
-                <div class="achievement-card achievement-silver">
-                    <div class="achievement-icon">
-                        <i class="fas fa-medal"></i>
-                    </div>
-                    <h3>HackCrux Jaipur</h3>
-                    <span class="achievement-position">2nd Position</span>
-                    <p>Runner-up in Open Innovation track with innovative contract farming solution, recognized for technical excellence.</p>
-                </div>
+    <div class="project-card reveal">
+      <div class="card-glow"></div>
+      <div class="project-header">
+        <span class="project-badge badge-conf">HealthTech • RAG</span>
+        <span class="project-icon">🏥</span>
+      </div>
+      <div class="project-name">IBR Medical Platform</div>
+      <div class="project-desc">4 products: Doctor App, Patient App, Doctor Web, Patient Web. 2 backends: RAG/agentic platform (ChromaDB) + custom knowledge base generator. Soon to be provided by central govt to all doctors.</div>
+      <div class="project-stack">
+        <span>Flutter</span><span>ChromaDB</span><span>AWS Bedrock</span><span>Python</span><span>Firebase</span>
+      </div>
+      <a href="https://ibr-assessment.web.app/" target="_blank" class="arrow">↗</a>
+    </div>
 
-                <div class="achievement-card achievement-bronze">
-                    <div class="achievement-icon">
-                        <i class="fas fa-lightbulb"></i>
-                    </div>
-                    <h3>Smart India Hackathon</h3>
-                    <span class="achievement-position">College Winner</span>
-                    <p>2nd position among 120+ teams at college level, showcasing innovative problem-solving capabilities.</p>
-                </div>
+    <div class="project-card reveal reveal-delay-1">
+      <div class="card-glow"></div>
+      <div class="project-header">
+        <span class="project-badge badge-live">50K+ Downloads</span>
+        <span class="project-icon">🔊</span>
+      </div>
+      <div class="project-name">Alert Soundbox</div>
+      <div class="project-desc">Paytm/PhonePe soundbox replacement. Real-time payment alerts, config v3, paywall localisation, multi-language. 50K+ downloads on Play Store.</div>
+      <div class="project-stack">
+        <span>Kotlin</span><span>Jetpack Compose</span><span>Mixpanel</span><span>Truecaller</span>
+      </div>
+    </div>
 
-                <div class="achievement-card achievement-special">
-                    <div class="achievement-icon">
-                        <i class="fas fa-feather"></i>
-                    </div>
-                    <h3>National Poetry Recognition</h3>
-                    <span class="achievement-position">National Level</span>
-                    <p>Represented at national and state-level poetry competitions, showcasing creative excellence.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="project-card reveal reveal-delay-2">
+      <div class="card-glow"></div>
+      <div class="project-header">
+        <span class="project-badge badge-conf">Chromium • Private</span>
+        <span class="project-icon">🌐</span>
+      </div>
+      <div class="project-name">Koi Browser</div>
+      <div class="project-desc">Fully functional private browser built on Chromium. Multi-profile system similar to Chrome. More features than a standard browser. Built from scratch.</div>
+      <div class="project-stack">
+        <span>Chromium</span><span>Kotlin</span><span>Android</span>
+      </div>
+    </div>
 
-    <!-- Contact Section -->
-    <section class="section contact" id="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Let's Connect</h2>
-                <p class="section-subtitle">Have a project in mind? Let's build something amazing together</p>
-            </div>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-text">
-                        <h3>Get In Touch</h3>
-                        <p>I'm always interested in new opportunities, exciting projects, and meaningful collaborations. Whether you have a question or just want to say hi, feel free to reach out!</p>
-                    </div>
-                    
-                    <div class="contact-details">
-                        <a href="mailto:atithishekhar@gmail.com" class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                            <div class="contact-text-wrapper">
-                                <span class="contact-label">Email</span>
-                                <span class="contact-value">atithishekhar@gmail.com</span>
-                            </div>
-                        </a>
-                        
-                        <a href="tel:+919696805245" class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-phone"></i>
-                            </div>
-                            <div class="contact-text-wrapper">
-                                <span class="contact-label">Phone</span>
-                                <span class="contact-value">+91 9696805245</span>
-                            </div>
-                        </a>
-                        
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <div class="contact-text-wrapper">
-                                <span class="contact-label">Location</span>
-                                <span class="contact-value">Jabalpur, India</span>
-                            </div>
-                        </div>
-                    </div>
+    <div class="project-card reveal">
+      <div class="card-glow"></div>
+      <div class="project-header">
+        <span class="project-badge badge-startup">Social • E2E Encrypted</span>
+        <span class="project-icon">💬</span>
+      </div>
+      <div class="project-name">Perica — Stranger Chat</div>
+      <div class="project-desc">Random user matching, personal & public rooms, group chat, stories, avatars, bio. End-to-end encrypted with RSA. Interest-based matching.</div>
+      <div class="project-stack">
+        <span>Kotlin</span><span>Compose</span><span>Firebase</span><span>RSA</span>
+      </div>
+    </div>
 
-                    <div class="social-links-large">
-                        <a href="mailto:atithishekhar@gmail.com" aria-label="Email" title="Email">
-                            <i class="fas fa-envelope"></i>
-                        </a>
-                        <a href="https://github.com/AtithiShekhar/" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/in/atithi-shekhar-720b73313/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="https://leetcode.com/u/AtithiShekhar1/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode" title="LeetCode">
-                            <i class="fas fa-code"></i>
-                        </a>
-                        <a href="https://atithishekhar.github.io/My-Resume/" target="_blank" rel="noopener noreferrer" aria-label="Portfolio" title="Portfolio">
-                            <i class="fas fa-globe"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="contact-form-wrapper">
-                    <form class="contact-form" id="contactForm">
-                        <div id="formMessage"></div>
-                        
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" name="name" placeholder="Your name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" name="subject" placeholder="How can I help you?" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
-                            <span>Send Message</span>
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="project-card reveal reveal-delay-1">
+      <div class="card-glow"></div>
+      <div class="project-header">
+        <span class="project-badge badge-live">Play Store</span>
+        <span class="project-icon">🎵</span>
+      </div>
+      <div class="project-name">TuneCa Music</div>
+      <div class="project-desc">Music streaming app integrating NewPipeExtractor. Multi-platform audio, podcasts, news. Published on Play Store.</div>
+      <div class="project-stack">
+        <span>Kotlin</span><span>NewPipeExtractor</span><span>ExoPlayer</span>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.audioplayer.tunecamusicdownloader" target="_blank" class="arrow">↗</a>
+    </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <div class="logo">AS</div>
-                    <p>Full Stack Android Developer</p>
-                </div>
-                <div class="footer-links">
-                    <a href="#home">Home</a>
-                    <a href="#about">About</a>
-                    <a href="#projects">Projects</a>
-                    <a href="#contact">Contact</a>
-                </div>
-                <div class="footer-social">
-                    <a href="mailto:atithishekhar@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-                    <a href="https://github.com/AtithiShekhar/" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/atithi-shekhar-720b73313/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Atithi Shekhar. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div class="project-card reveal reveal-delay-2">
+      <div class="card-glow"></div>
+      <div class="project-header">
+        <span class="project-badge badge-live">Automotive</span>
+        <span class="project-icon">🚗</span>
+      </div>
+      <div class="project-name">OBD Smart — Car Scanner</div>
+      <div class="project-desc">Vehicle diagnostics for Mahindra, Tata, Maruti, Kia, VW, Triumph, MG, Hyundai. CAN ID live data, injector coding, RSSI signal indicator.</div>
+      <div class="project-stack">
+        <span>Kotlin</span><span>Compose</span><span>CAN Protocol</span><span>BLE</span>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.obdsmart.obdsmart" target="_blank" class="arrow">↗</a>
+    </div>
 
-    <!-- Back to Top Button -->
-    <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
+  </div>
+</section>
 
-    <!-- Scripts -->
-    <script src="script.js"></script>
+<!-- ACHIEVEMENTS -->
+<section class="section" id="achievements" style="background: var(--bg2);">
+  <div class="section-label reveal"><span>04</span> Achievements</div>
+  <h2 class="section-title reveal reveal-delay-1">Not just <span class="accent">code</span>.<br><span class="accent2">Recognition</span>.</h2>
+  <div class="achievements-list">
+    <div class="achievement-row reveal">
+      <div class="achievement-icon">🏆</div>
+      <div class="achievement-content">
+        <div class="achievement-title">Hack&Make Winner — MP's Biggest Hackathon</div>
+        <div class="achievement-desc">Won against 3,000+ teams. Built ICCS (Intelligent Central Catalogue System). Award received directly from the Chief Minister of Madhya Pradesh.</div>
+      </div>
+    </div>
+    <div class="achievement-row reveal">
+      <div class="achievement-icon">🏛</div>
+      <div class="achievement-content">
+        <div class="achievement-title">NSE Mumbai Invite + MSME Ministerial Award</div>
+        <div class="achievement-desc">Invited to National Stock Exchange, Mumbai. Recognised by MSME Minister of Maharashtra for Starial's tech innovation.</div>
+      </div>
+    </div>
+    <div class="achievement-row reveal">
+      <div class="achievement-icon">🤝</div>
+      <div class="achievement-content">
+        <div class="achievement-title">Met President of Jio Infocomm</div>
+        <div class="achievement-desc">Networking through product demonstration with Dr. Sunil Dutt, President at Reliance Jio Infocomm.</div>
+      </div>
+    </div>
+    <div class="achievement-row reveal">
+      <div class="achievement-icon">🥇</div>
+      <div class="achievement-content">
+        <div class="achievement-title">Vibe-Coding Hackathon — 1st Place</div>
+        <div class="achievement-desc">Secured 1st position out of 95 teams. Cash prize, certificate, and gift vouchers.</div>
+      </div>
+    </div>
+    <div class="achievement-row reveal">
+      <div class="achievement-icon">🥈</div>
+      <div class="achievement-content">
+        <div class="achievement-title">HackCrux Jaipur — Runner-Up</div>
+        <div class="achievement-desc">2nd place in Open Innovation track. Built a full-stack contract farming platform empowering farmers.</div>
+      </div>
+    </div>
+    <div class="achievement-row reveal">
+      <div class="achievement-icon">🚀</div>
+      <div class="achievement-content">
+        <div class="achievement-title">NASA Space Apps Challenge 2025</div>
+        <div class="achievement-desc">Developed an Android application as part of NASA's global hackathon challenge.</div>
+      </div>
+    </div>
+    <div class="achievement-row reveal">
+      <div class="achievement-icon">🏅</div>
+      <div class="achievement-content">
+        <div class="achievement-title">Smart India Hackathon — 2x College Finalist</div>
+        <div class="achievement-desc">2nd among 90 teams (2025) and 3rd among 120 teams (2024) at college level.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section" id="skills">
+  <div class="section-label reveal"><span>05</span> Skills</div>
+  <h2 class="section-title reveal reveal-delay-1">The <span class="accent">stack</span> I <span class="accent2">ship</span> with.</h2>
+  <div class="skills-orbit">
+    <div class="skills-category reveal">
+      <div class="skills-cat-label">Mobile</div>
+      <div class="skills-pills">
+        <div class="skill-pill"><span>Android</span></div>
+        <div class="skill-pill"><span>Kotlin</span></div>
+        <div class="skill-pill"><span>Java</span></div>
+        <div class="skill-pill"><span>Jetpack Compose</span></div>
+        <div class="skill-pill"><span>Flutter</span></div>
+        <div class="skill-pill"><span>Dart</span></div>
+        <div class="skill-pill"><span>React Native</span></div>
+      </div>
+    </div>
+    <div class="skills-category reveal reveal-delay-1">
+      <div class="skills-cat-label">Backend</div>
+      <div class="skills-pills">
+        <div class="skill-pill"><span>Go / Golang</span></div>
+        <div class="skill-pill"><span>Node.js</span></div>
+        <div class="skill-pill"><span>Spring Boot</span></div>
+        <div class="skill-pill"><span>REST APIs</span></div>
+        <div class="skill-pill"><span>Kafka</span></div>
+        <div class="skill-pill"><span>Redis</span></div>
+        <div class="skill-pill"><span>Python</span></div>
+      </div>
+    </div>
+    <div class="skills-category reveal reveal-delay-2">
+      <div class="skills-cat-label">Cloud & DB</div>
+      <div class="skills-pills">
+        <div class="skill-pill"><span>AWS Lambda</span></div>
+        <div class="skill-pill"><span>ECS / Fargate</span></div>
+        <div class="skill-pill"><span>S3</span></div>
+        <div class="skill-pill"><span>Bedrock</span></div>
+        <div class="skill-pill"><span>PostgreSQL</span></div>
+        <div class="skill-pill"><span>MongoDB</span></div>
+        <div class="skill-pill"><span>Firebase</span></div>
+        <div class="skill-pill"><span>ChromaDB</span></div>
+      </div>
+    </div>
+    <div class="skills-category reveal reveal-delay-3">
+      <div class="skills-cat-label">Blockchain</div>
+      <div class="skills-pills">
+        <div class="skill-pill"><span>TRON / USDT-TRC20</span></div>
+        <div class="skill-pill"><span>Custodial Wallets</span></div>
+        <div class="skill-pill"><span>Payment Gateways</span></div>
+      </div>
+    </div>
+    <div class="skills-category reveal reveal-delay-4">
+      <div class="skills-cat-label">Frontend</div>
+      <div class="skills-pills">
+        <div class="skill-pill"><span>React</span></div>
+        <div class="skill-pill"><span>HTML / CSS</span></div>
+        <div class="skill-pill"><span>Tailwind CSS</span></div>
+        <div class="skill-pill"><span>JavaScript</span></div>
+      </div>
+    </div>
+    <div class="skills-category reveal">
+      <div class="skills-cat-label">AI / ML</div>
+      <div class="skills-pills">
+        <div class="skill-pill"><span>RAG Pipelines</span></div>
+        <div class="skill-pill"><span>ChromaDB</span></div>
+        <div class="skill-pill"><span>LangChain</span></div>
+        <div class="skill-pill"><span>AWS Bedrock</span></div>
+      </div>
+    </div>
+    <div class="skills-category reveal">
+      <div class="skills-cat-label">Tools</div>
+      <div class="skills-pills">
+        <div class="skill-pill"><span>Git</span></div>
+        <div class="skill-pill"><span>CI/CD</span></div>
+        <div class="skill-pill"><span>Docker</span></div>
+        <div class="skill-pill"><span>MVVM</span></div>
+        <div class="skill-pill"><span>Microservices</span></div>
+        <div class="skill-pill"><span>RSA Encryption</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-glow"></div>
+  <div class="section-label reveal" style="justify-content:center"><span>06</span> Contact</div>
+  <h2 class="contact-title reveal reveal-delay-1">Let's <span class="accent-text">build</span><br>something.</h2>
+  <p class="contact-subtitle reveal reveal-delay-2">I'm open to full-time roles, contract work, and ambitious projects. If you're building something that matters, let's talk.</p>
+  <div class="contact-links reveal reveal-delay-3">
+    <a href="mailto:atithishekhar@gmail.com" class="contact-link"><span>atithishekhar@gmail.com</span></a>
+    <a href="tel:+919696805245" class="contact-link"><span>+91 9696805245</span></a>
+    <a href="https://github.com/AtithiShekhar" target="_blank" class="contact-link"><span>GitHub ↗</span></a>
+    <a href="https://www.linkedin.com/in/atithi-shekhar-720b73313" target="_blank" class="contact-link"><span>LinkedIn ↗</span></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-left">© 2026 ATITHI SHEKHAR</div>
+  <div class="footer-right">Designed with obsession</div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════
+// CUSTOM CURSOR
+// ═══════════════════════════════════════════════════
+const dot = document.querySelector('.cursor-dot');
+const ring = document.querySelector('.cursor-ring');
+let mouseX = 0, mouseY = 0;
+let ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  dot.style.left = mouseX - 4 + 'px';
+  dot.style.top = mouseY - 4 + 'px';
+});
+
+function animateRing() {
+  ringX += (mouseX - ringX) * 0.12;
+  ringY += (mouseY - ringY) * 0.12;
+  ring.style.left = ringX - 20 + 'px';
+  ring.style.top = ringY - 20 + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button, .project-card, .about-card, .skill-pill, .achievement-row').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    ring.classList.add('hover');
+    dot.style.transform = 'scale(2.5)';
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.classList.remove('hover');
+    dot.style.transform = 'scale(1)';
+  });
+});
+
+// ═══════════════════════════════════════════════════
+// PRELOADER
+// ═══════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('preloader').classList.add('hide');
+    animateHero();
+  }, 2800);
+});
+
+// ═══════════════════════════════════════════════════
+// HERO ANIMATIONS
+// ═══════════════════════════════════════════════════
+function animateHero() {
+  const eyebrow = document.querySelector('.hero-eyebrow span');
+  const lines = document.querySelectorAll('.hero-name .line-inner');
+  const subtitle = document.querySelector('.hero-subtitle span');
+  const cta = document.querySelector('.hero-cta');
+
+  setTimeout(() => {
+    eyebrow.style.transition = 'all 0.8s cubic-bezier(0.22,1,0.36,1)';
+    eyebrow.style.transform = 'translateY(0)';
+    eyebrow.style.opacity = '1';
+  }, 200);
+
+  lines.forEach((line, i) => {
+    setTimeout(() => {
+      line.style.transition = 'all 1s cubic-bezier(0.22,1,0.36,1)';
+      line.style.transform = 'translateY(0)';
+      line.style.opacity = '1';
+    }, 400 + i * 200);
+  });
+
+  setTimeout(() => {
+    subtitle.style.transition = 'all 1s cubic-bezier(0.22,1,0.36,1)';
+    subtitle.style.transform = 'translateY(0)';
+    subtitle.style.opacity = '1';
+  }, 900);
+
+  setTimeout(() => {
+    cta.style.transition = 'all 0.8s cubic-bezier(0.22,1,0.36,1)';
+    cta.style.opacity = '1';
+    cta.style.transform = 'translateY(0)';
+  }, 1200);
+}
+
+// ═══════════════════════════════════════════════════
+// SCROLL PROGRESS
+// ═══════════════════════════════════════════════════
+const progressBar = document.querySelector('.scroll-progress');
+window.addEventListener('scroll', () => {
+  const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  progressBar.style.width = scrolled + '%';
+});
+
+// ═══════════════════════════════════════════════════
+// REVEAL ON SCROLL
+// ═══════════════════════════════════════════════════
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ═══════════════════════════════════════════════════
+// COUNTER ANIMATION
+// ═══════════════════════════════════════════════════
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseInt(el.dataset.count);
+      let current = 0;
+      const increment = Math.ceil(target / 40);
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        el.textContent = current + (el.closest('.about-card').querySelector('.card-label').textContent.includes('K+') ? 'K+' : '+');
+      }, 40);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.card-num[data-count]').forEach(el => counterObserver.observe(el));
+
+// ═══════════════════════════════════════════════════
+// PARTICLES CANVAS
+// ═══════════════════════════════════════════════════
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const PARTICLE_COUNT = 60;
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.radius = Math.random() * 1.5 + 0.5;
+    this.alpha = Math.random() * 0.3 + 0.1;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200, 255, 0, ${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+function drawConnections() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(200, 255, 0, ${0.06 * (1 - dist / 120)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawConnections();
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ═══════════════════════════════════════════════════
+// 3D CARD TILT
+// ═══════════════════════════════════════════════════
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 15;
+    const rotateY = (centerX - x) / 15;
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+
+    const glow = card.querySelector('.card-glow');
+    if (glow) {
+      glow.style.left = x - 150 + 'px';
+      glow.style.top = y - 150 + 'px';
+    }
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+  });
+});
+
+// ═══════════════════════════════════════════════════
+// SMOOTH NAV LINKS
+// ═══════════════════════════════════════════════════
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
 </body>
 </html>
