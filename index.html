@@ -187,12 +187,9 @@ a{color:inherit;text-decoration:none;cursor:none}button{cursor:none;border:none;
 .exp-tag{font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;padding:.25rem .6rem;border:1px solid var(--border);color:var(--muted);transition:all .3s}
 .exp-tag:hover{border-color:var(--accent);color:var(--accent);background:rgba(255,77,0,.05)}
 
-/* ═══ HORIZONTAL SCROLL PROJECTS ═══ */
-.projects-wrapper{position:relative}
-.projects-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:0 clamp(2rem,6vw,8rem)}
-.projects-header{margin-bottom:1.5rem}
-.projects-track{display:flex;gap:2rem;will-change:transform}
-.p-card{min-width:clamp(320px,28vw,420px);flex-shrink:0;position:relative;overflow:hidden;transition:transform .4s;background:var(--card);border:1px solid var(--border)}
+/* ═══ PROJECTS GRID ═══ */
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.p-card{position:relative;overflow:hidden;transition:transform .4s;background:var(--card);border:1px solid var(--border)}
 /* ANIMATED BORDER GRADIENT */
 .p-card::before{content:'';position:absolute;inset:-1px;background:conic-gradient(from var(--angle,0deg),var(--accent),var(--accent2),var(--accent3),var(--accent));padding:1px;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s;animation:rotateBorder 4s linear infinite;pointer-events:none}
 @property --angle{syntax:'<angle>';initial-value:0deg;inherits:false}
@@ -210,13 +207,6 @@ a{color:inherit;text-decoration:none;cursor:none}button{cursor:none;border:none;
 .p-stack span{font-family:var(--mono);font-size:.5rem;padding:.2rem .5rem;background:rgba(255,77,0,.05);color:var(--accent);letter-spacing:.04em}
 .p-arrow{position:absolute;bottom:1.5rem;right:1.5rem;width:32px;height:32px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .3s;z-index:2}
 .p-card:hover .p-arrow{background:var(--accent);border-color:var(--accent);color:#000;transform:rotate(-45deg)}
-.project-counter{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted);margin-top:1.2rem}
-.project-counter em{font-style:normal;color:var(--accent);font-weight:700;font-size:1rem}
-/* SCROLL HINT */
-.scroll-hint{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
-.scroll-hint span{font-family:var(--mono);font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
-.scroll-hint-line{width:40px;height:1px;background:var(--accent);animation:shPulse 2s infinite}
-@keyframes shPulse{0%,100%{opacity:.3}50%{opacity:1}}
 
 /* ═══ ACHIEVEMENTS ═══ */
 .ach-section{background:var(--bg2)}
@@ -266,13 +256,14 @@ a{color:inherit;text-decoration:none;cursor:none}button{cursor:none;border:none;
 .float-code{position:absolute;pointer-events:none;font-family:var(--mono);font-weight:300;opacity:.04;will-change:transform}
 
 /* ═══ RESPONSIVE ═══ */
+@media(max-width:1100px){.projects-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){
   .cursor-dot,.cursor-blob,.cursor-trail{display:none!important}
   body{cursor:auto}a,button{cursor:auto}
   .nav-links,.nav-time{display:none}
   .about-grid{grid-template-columns:1fr;gap:2rem}
   .exp-card{position:relative!important;top:auto!important}
-  .p-card{min-width:82vw}
+  .projects-grid{grid-template-columns:1fr}
   .ach-row{grid-template-columns:40px 1fr;gap:1rem}
   .ach-year{display:none}
   .footer{flex-direction:column;gap:.5rem;text-align:center}
@@ -392,39 +383,32 @@ a{color:inherit;text-decoration:none;cursor:none}button{cursor:none;border:none;
 <!-- WAVE DIVIDER FLIP -->
 <div class="divider-wave divider-wave-flip"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,0 720,60 1080,30 C1260,15 1380,30 1440,30 L1440,0 L0,0Z"/></svg></div>
 
-<!-- PROJECTS HORIZONTAL SCROLL -->
-<div id="projects-anchor" style="position:relative"></div>
-<div class="projects-wrapper" id="projectsWrapper">
-  <div class="projects-sticky">
-    <div class="projects-header">
-      <div class="section-tag scramble-target">03 — Projects</div>
-      <h2 class="section-heading">Things I <span class="fire">built</span>. Things that <span class="gradient-text">ship</span>.</h2>
-      <div class="scroll-hint"><div class="scroll-hint-line"></div><span>Scroll to explore</span><div class="scroll-hint-line"></div></div>
-    </div>
-    <div class="projects-track" id="projectsTrack">
+<!-- PROJECTS -->
+<section class="section" id="projects-anchor">
+  <div class="section-tag reveal-up scramble-target">03 — Projects</div>
+  <h2 class="section-heading reveal-up reveal-d1">Things I <span class="fire">built</span>. Things that <span class="gradient-text">ship</span>.</h2>
+  <div class="projects-grid" id="projectsGrid">
 
-      <div class="p-card"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent)"></div><div class="p-badge conf">Fintech · Confidential</div><div class="p-name">American Crypto Card</div><div class="p-desc">Custodial crypto wallet, physical Visa cards, USDT transfers, fiat conversion. Dubai & India funded. 40% in 6 days.</div><div class="p-stack"><span>Flutter</span><span>Go</span><span>PostgreSQL</span><span>Kafka</span><span>Redis</span><span>TRON</span></div></div></div>
+    <div class="p-card reveal-up"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent)"></div><div class="p-badge conf">Fintech · Confidential</div><div class="p-name">American Crypto Card</div><div class="p-desc">Custodial crypto wallet, physical Visa cards, USDT transfers, fiat conversion. Dubai & India funded. 40% in 6 days.</div><div class="p-stack"><span>Flutter</span><span>Go</span><span>PostgreSQL</span><span>Kafka</span><span>Redis</span><span>TRON</span></div></div></div>
 
-      <div class="p-card"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent)"></div><div class="p-badge gov">GovTech · Live</div><div class="p-name">Prison Calling System</div><div class="p-desc">Video/voice, billing, PSTN, recording, tracking. All Chhattisgarh jails.</div><div class="p-stack"><span>Spring Boot</span><span>Kotlin</span><span>Exotel</span><span>Firebase</span></div></div></div>
+    <div class="p-card reveal-up"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent)"></div><div class="p-badge gov">GovTech · Live</div><div class="p-name">Prison Calling System</div><div class="p-desc">Video/voice, billing, PSTN, recording, tracking. All Chhattisgarh jails.</div><div class="p-stack"><span>Spring Boot</span><span>Kotlin</span><span>Exotel</span><span>Firebase</span></div></div></div>
 
-      <div class="p-card"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent3)"></div><div class="p-badge live">40K+ Downloads</div><div class="p-name">Starial + Delivery</div><div class="p-desc">AI quick commerce SaaS. Main + delivery app solo. NSE Mumbai. MSME award.</div><div class="p-stack"><span>Flutter</span><span>Firebase</span><span>AI</span><span>Kotlin</span></div></div><a href="https://play.google.com/store/apps/details?id=com.starial.stationery" target="_blank" class="p-arrow">↗</a></div>
+    <div class="p-card reveal-up"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent3)"></div><div class="p-badge live">40K+ Downloads</div><div class="p-name">Starial + Delivery</div><div class="p-desc">AI quick commerce SaaS. Main + delivery app solo. NSE Mumbai. MSME award.</div><div class="p-stack"><span>Flutter</span><span>Firebase</span><span>AI</span><span>Kotlin</span></div></div><a href="https://play.google.com/store/apps/details?id=com.starial.stationery" target="_blank" class="p-arrow">↗</a></div>
 
-      <div class="p-card"><div class="p-card-inner"><div class="p-glow" style="background:#a855f7"></div><div class="p-badge health">HealthTech · RAG</div><div class="p-name">IBR Medical</div><div class="p-desc">4 products, 2 backends. RAG/agentic + custom KB. Soon provided by central govt.</div><div class="p-stack"><span>Flutter</span><span>ChromaDB</span><span>Bedrock</span><span>Python</span></div></div><a href="https://ibr-assessment.web.app/" target="_blank" class="p-arrow">↗</a></div>
+    <div class="p-card reveal-up"><div class="p-card-inner"><div class="p-glow" style="background:#a855f7"></div><div class="p-badge health">HealthTech · RAG</div><div class="p-name">IBR Medical</div><div class="p-desc">4 products, 2 backends. RAG/agentic + custom KB. Soon provided by central govt.</div><div class="p-stack"><span>Flutter</span><span>ChromaDB</span><span>Bedrock</span><span>Python</span></div></div><a href="https://ibr-assessment.web.app/" target="_blank" class="p-arrow">↗</a></div>
 
-      <div class="p-card"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent3)"></div><div class="p-badge live">50K+ Downloads</div><div class="p-name">Alert Soundbox</div><div class="p-desc">Paytm/PhonePe replacement. Real-time alerts, 50K+ downloads.</div><div class="p-stack"><span>Kotlin</span><span>Compose</span><span>Mixpanel</span></div></div></div>
+    <div class="p-card reveal-up"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent3)"></div><div class="p-badge live">50K+ Downloads</div><div class="p-name">Alert Soundbox</div><div class="p-desc">Paytm/PhonePe replacement. Real-time alerts, 50K+ downloads.</div><div class="p-stack"><span>Kotlin</span><span>Compose</span><span>Mixpanel</span></div></div></div>
 
-      <div class="p-card"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent2)"></div><div class="p-badge conf">Chromium</div><div class="p-name">Koi Browser</div><div class="p-desc">Private browser on Chromium. Multi-profile. Built from scratch.</div><div class="p-stack"><span>Chromium</span><span>Kotlin</span><span>Android</span></div></div></div>
+    <div class="p-card reveal-up"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent2)"></div><div class="p-badge conf">Chromium</div><div class="p-name">Koi Browser</div><div class="p-desc">Private browser on Chromium. Multi-profile. Built from scratch.</div><div class="p-stack"><span>Chromium</span><span>Kotlin</span><span>Android</span></div></div></div>
 
-      <div class="p-card"><div class="p-card-inner"><div class="p-glow" style="background:#f472b6"></div><div class="p-badge social">E2E Encrypted</div><div class="p-name">Perica Chat</div><div class="p-desc">Stranger matching, rooms, stories, RSA encryption.</div><div class="p-stack"><span>Kotlin</span><span>Compose</span><span>Firebase</span><span>RSA</span></div></div></div>
+    <div class="p-card reveal-up"><div class="p-card-inner"><div class="p-glow" style="background:#f472b6"></div><div class="p-badge social">E2E Encrypted</div><div class="p-name">Perica Chat</div><div class="p-desc">Stranger matching, rooms, stories, RSA encryption.</div><div class="p-stack"><span>Kotlin</span><span>Compose</span><span>Firebase</span><span>RSA</span></div></div></div>
 
-      <div class="p-card"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent3)"></div><div class="p-badge live">Play Store</div><div class="p-name">TuneCa Music</div><div class="p-desc">Multi-platform streaming via NewPipeExtractor.</div><div class="p-stack"><span>Kotlin</span><span>ExoPlayer</span></div></div><a href="https://play.google.com/store/apps/details?id=com.audioplayer.tunecamusicdownloader" target="_blank" class="p-arrow">↗</a></div>
+    <div class="p-card reveal-up"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent3)"></div><div class="p-badge live">Play Store</div><div class="p-name">TuneCa Music</div><div class="p-desc">Multi-platform streaming via NewPipeExtractor.</div><div class="p-stack"><span>Kotlin</span><span>ExoPlayer</span></div></div><a href="https://play.google.com/store/apps/details?id=com.audioplayer.tunecamusicdownloader" target="_blank" class="p-arrow">↗</a></div>
 
-      <div class="p-card"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent)"></div><div class="p-badge live">Automotive</div><div class="p-name">OBD Smart</div><div class="p-desc">Diagnostics for 8+ brands. CAN live data, injector coding.</div><div class="p-stack"><span>Kotlin</span><span>CAN</span><span>BLE</span></div></div><a href="https://play.google.com/store/apps/details?id=com.obdsmart.obdsmart" target="_blank" class="p-arrow">↗</a></div>
+    <div class="p-card reveal-up"><div class="p-card-inner"><div class="p-glow" style="background:var(--accent)"></div><div class="p-badge live">Automotive</div><div class="p-name">OBD Smart</div><div class="p-desc">Diagnostics for 8+ brands. CAN live data, injector coding.</div><div class="p-stack"><span>Kotlin</span><span>CAN</span><span>BLE</span></div></div><a href="https://play.google.com/store/apps/details?id=com.obdsmart.obdsmart" target="_blank" class="p-arrow">↗</a></div>
 
-    </div>
-    <div class="project-counter"><em id="projCurrent">01</em> / 09</div>
   </div>
-</div>
+</section>
 
 <!-- WAVE DIVIDER -->
 <div class="divider-wave"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,30 1440,30 L1440,60 L0,60Z"/></svg></div>
@@ -537,40 +521,6 @@ document.querySelectorAll('.exp-card').forEach(el=>eObs.observe(el));
 // ═══ COUNTER ═══
 const cObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const el=e.target,tgt=+el.dataset.target;let cur=0;const inc=Math.max(1,Math.ceil(tgt/45));const tm=setInterval(()=>{cur+=inc;if(cur>=tgt){cur=tgt;clearInterval(tm)}el.textContent=cur+'+'},30);cObs.unobserve(el)}})},{threshold:.5});
 document.querySelectorAll('.counter').forEach(el=>cObs.observe(el));
-
-// ═══ HORIZONTAL SCROLL PROJECTS ═══
-const projW=document.getElementById('projectsWrapper');
-const projT=document.getElementById('projectsTrack');
-const projC=document.getElementById('projCurrent');
-
-function getTrackOverflow(){
-  const stickyPad=parseFloat(getComputedStyle(document.querySelector('.projects-sticky')).paddingLeft)||0;
-  const containerW=window.innerWidth-stickyPad*2;
-  return Math.max(0,projT.scrollWidth-containerW);
-}
-function calcProjectsHeight(){
-  const overflow=getTrackOverflow();
-  projW.style.height=(window.innerHeight+overflow)+'px';
-}
-setTimeout(calcProjectsHeight,100);
-window.addEventListener('resize',calcProjectsHeight);
-window.addEventListener('load',()=>setTimeout(calcProjectsHeight,200));
-
-window.addEventListener('scroll',()=>{
-  const rect=projW.getBoundingClientRect();
-  const wH=projW.offsetHeight;
-  const vH=window.innerHeight;
-  const scrollIn=Math.max(0,-rect.top);
-  const maxScroll=Math.max(1,wH-vH);
-  const progress=Math.min(1,scrollIn/maxScroll);
-  const overflow=getTrackOverflow();
-  const tx=progress*overflow;
-  projT.style.transform=`translateX(${-tx}px)`;
-  const cards=projT.querySelectorAll('.p-card');
-  const cw=cards[0]?(cards[0].offsetWidth+32):400;
-  const ci=Math.min(Math.floor(tx/cw)+1,cards.length);
-  projC.textContent=String(ci).padStart(2,'0');
-});
 
 // ═══ 3D TILT ON PROJECT CARDS ═══
 document.querySelectorAll('.p-card').forEach(card=>{
